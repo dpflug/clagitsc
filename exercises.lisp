@@ -1,3 +1,7 @@
+(defpackage :clgisc
+  (:use :common-lisp :sdraw))
+(in-package :clgisc)
+
 (defun clgisc-2.22 (a b c d)
   (list (list a b) (list c d)))
 
