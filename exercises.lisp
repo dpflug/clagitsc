@@ -49,16 +49,13 @@
   (member (throw-value throw) '(2 3 12)))
 
 (defun say-throw (throw)
+  "Takes a throw. Returns a number or name for the roll."
   (cond ((snake-eyes-p throw) :snake-eyes)
         ((boxcars-p throw) :boxcars)
         (t (throw-value throw))))
 
-(defun throw-result-msg (throw)
-  (cond ((instant-loss-p throw) "You lose. :(")
-        ((instant-win-p throw) "You win!")
-        (t (format t "Your point is ~A" (apply #'+ throw)))))
-
 (defun score (throw)
+  "Takes a throw. Returns the first part of the scoring message."
   (list 'throw (first throw)
         'and (second throw)
         '--
@@ -66,6 +63,7 @@
         '--))
 
 (defun craps ()
+  "Plays the first roll of Craps."
   (let ((throw (throw-dice)))
     (append (score throw)
             (cond ((instant-win-p throw) '(you win))
@@ -73,8 +71,8 @@
                   (t (list 'your 'point 'is
                            (throw-value throw)))))))
 
-;; page 164
 (defun try-for-point (point)
+  "Takes a point and plays Craps against it."
   (let ((throw (throw-dice)))
     (append (score throw)
             (cond ((or (instant-win-p throw)
