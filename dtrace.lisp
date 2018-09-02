@@ -9,8 +9,8 @@
 ;;; User-level routines:
 ;;; DTRACE - same syntax as TRACE
 ;;; DUNTRACE - same syntax as UNTRACE
-
-(in-package "DTRACE" :use ’("LISP"))
+(defpackage "DTRACE")
+(in-package "DTRACE" :use ’("LISP" :common-lisp))
 
 (export ’(dtrace::dtrace dtrace::duntrace
           *dtrace-print-length* *dtrace-print-level*

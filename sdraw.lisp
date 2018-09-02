@@ -9,8 +9,8 @@
 ;;; (SDRAW obj)  - draws obj on the terminal
 ;;; (SDRAW-LOOP) - puts the user in a read-eval-draw loop
 ;;; (SCRAWL obj) - interactively crawl around obj
-
-(in-package "SDRAW")
+(defpackage "SDRAW")
+(in-package "SDRAW" :use (:common-lisp))
 
 (export ’(sdraw::sdraw sdraw::sdraw-loop sdraw::scrawl))
 
