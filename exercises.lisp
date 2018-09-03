@@ -341,3 +341,19 @@
 (defun description (block)
   "Returns a list of attributes block has."
   (reduce #'append (desc2 block)))
+
+; 7.30
+(defvar *words*)
+(setf *words*
+      '((one un)
+        (two deux)
+        (three trois)
+        (four quatre)
+        (five cinq)))
+
+(defvar *spanish-words*)
+
+(mapcar #'(lambda (w s)
+            (append w (list s)))
+        *words*
+        '(uno dos tres quatro cinco))
