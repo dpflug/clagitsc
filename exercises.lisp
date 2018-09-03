@@ -357,3 +357,19 @@
             (append w (list s)))
         *words*
         '(uno dos tres quatro cinco))
+
+; 8.4
+(defun laugh (n)
+  "Return a list containing given number of \"HA\"s."
+  (cond ((= n 0) '())
+        (t (cons 'ha (laugh (1- n))))))
+
+(defun add-up (l)
+  "Sum a list of numbers."
+  (cond ((null l) 0)
+        (t (+ (car l) (add-up (cdr l))))))
+
+(defun alloddp (l)
+  (cond ((null l) t)
+        ((evenp (car l)) 'nil)
+        (t (alloddp (cdr l)))))
