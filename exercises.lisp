@@ -370,6 +370,352 @@
         (t (+ (car l) (add-up (cdr l))))))
 
 (defun alloddp (l)
+  "Returns a t if the provided list is all odd numbers."
   (cond ((null l) t)
-        ((evenp (car l)) 'nil)
+        ((evenp (car l)) nil)
         (t (alloddp (cdr l)))))
+
+(defun rec-member (el lst)
+  "Returns a t if the provided element is a member of the provided list."
+  (cond ((null lst) nil)
+        ((eql el (car lst)) t)
+        (t (rec-member el (cdr lst)))))
+
+(defun rec-assoc (el lst)
+  "Returns the pair whose car matches the provided element."
+  (cond ((null lst) nil)
+        ((eql el (car (car lst))) (car lst))
+        (t (rec-assoc el (cdr lst)))))
+
+(defun rec-nth (n lst)
+  "Return the nth element of list."
+  (cond ((null lst) nil)
+        ((zerop n) (car lst))
+        (t (rec-nth (1- n) (cdr lst)))))
+
+(defun rec-plus (x y)
+  "Adds 2 numbers, recursively."
+  (cond ((< y 0) nil)
+        ((zerop y) x)
+        (t (rec-plus (1+ x) (1- y)))))
+
+(defun fib (n)
+  "Compute a Fibonacci number"
+  (cond ((or (= n 0) (= n 1)) 1)
+        (t (+ (fib (- n 1))
+              (fib (- n 2))))))
+
+; 8.14
+(defun inf ()
+  "Smallest infinite recursive."
+  (inf))
+
+(defun anyoddp (l)
+  "Checks if any item in a list is odd."
+  (cond ((null l) nil)
+        ((oddp (car l)) t)
+        (t (anyoddp (cdr l)))))
+
+; 8.17
+(defun find-first-odd (l)
+  "Returns the first odd number in a list."
+  (cond ((null l) nil)
+        ((oddp (car l)) (car l))
+        (t (find-first-odd (cdr l)))))
+
+(defun last-element (l)
+  "Return the last element of a list."
+  (cond ((null l) nil)
+        ((null (cdr l)) (car l))
+        (t (last-element (cdr l)))))
+
+(defun add-nums (n)
+  "Add N, N-1, N-2, ... to 0."
+  (cond ((zerop n) 0)
+        (t (+ n (add-nums (1- n))))))
+
+(defun all-equal (l)
+  "Return t if all the items in a list are equal."
+  (cond ((null (cdr l)) t)
+        ((eql (car l) (cadr l)) (all-equal (cdr l)))
+        (t nil)))
+
+(defun count-down (n)
+  "Creates a list counting down from n."
+  (cond ((zerop n) nil)
+        (t (cons n (count-down (1- n))))))
+
+(defun applicative-fact (n)
+  "An applicative version of the factorial function."
+  (mapcar #'* (count-down n)))
+
+(defun count-down-b (n)
+  "count-down, but it ends in 0 instead"
+  (cond ((zerop n) '(0))
+        (t (cons n (count-down (1- n))))))
+
+(defun count-down-c (n)
+  "count-down, but it ends in 0 instead"
+  (cond ((= -1 n) nil)
+        (t (cons n (count-down (1- n))))))
+
+(defun square-list (l)
+  "Takes a list of numbers. Returns a list of their squares."
+  (cond ((null l) l)
+        (t (let ((n (car l)))
+             (cons (* n n) (square-list (cdr l)))))))
+
+; 8.28
+(defun my-nth (n x)
+  "Return the nth item of a list, recursively."
+  (cond ((null x) nil)
+        ((zerop n) (car x))
+        (t (my-nth (1- n) (cdr x)))))
+
+(defun my-member (el lst)
+  "Return a matching item from a list, recursively."
+  (cond ((null lst) nil)
+        ((eql el (car lst)) (car lst))
+        (t (my-member el (cdr lst)))))
+
+(defun my-assoc (el lst)
+  "Return a matching pair from an a-list, recursively."
+  (cond ((null lst) nil)
+        ((eql el (car (car lst))) (car lst))
+        (t (my-assoc el (cdr lst)))))
+
+(defun compare-lengths (l1 l2)
+  "Takes 2 lists. Returns \"same-length\", \"first-is-longer\", or
+  \"second-is-longer\", depending on their relationship."
+  (cond ((and (null l1) (null l2)) 'same-length)
+        ((null l2) 'first-is-longer)
+        ((null l1) 'second-is-longer)
+        (t (compare-lengths (cdr l1) (cdr l2)))))
+
+; 8.32
+(defun sum-numeric-elements (l)
+  "Sum only the numeric elements of a list."
+  (cond ((null l) 0)
+        ((numberp (car l))
+         (+ (car l) (sum-numeric-elements (cdr l))))
+        (t (sum-numeric-elements (cdr l)))))
+
+(defun my-remove (el lst)
+  "Recursive REMOVE."
+  (cond ((null lst) nil)
+        ((eql el (car lst)) (my-remove el (cdr lst)))
+        (t (cons (car lst) (my-remove el (cdr lst))))))
+
+(defun my-intersection (l1 l2)
+  "Recursive INTERSECTION."
+  (cond ((or (null l1) (null l2)) nil)
+        ((member (car l1) l2)
+         (cons (car l1) (my-intersection (cdr l1) l2)))
+        (t (my-intersection (cdr l1) l2))))
+
+(defun my-set-difference (l1 l2)
+  "Recursive SET-DIFFERENCE."
+  (let ((cand (car l1)))
+    (cond ((and (null l1) (null l2)) nil)
+          ((null l1) l2)
+          ((null l2) l1)
+          ((member cand l2)
+           (my-set-difference (remove cand l1) (remove cand l2)))
+          (t (cons cand (my-set-difference (cdr l1) l2))))))
+
+(defun count-odd-condaug (l)
+  "Counts the number of odd items in a list using conditional augmentation."
+  (cond ((null l) 0)
+        ((oddp (car l)) (1+ (count-odd-condaug (cdr l))))
+        (t (count-odd-condaug (cdr l)))))
+
+(defun count-odd-reg (l)
+  "Counts the number of odd items in a list using regular augmentation."
+  (cond ((null l) 0)
+        (t (+ (if (oddp (car l))
+                  1
+                  0)
+              (count-odd-reg (cdr l))))))
+
+(defun count-atoms (l)
+  "Counts the number of atoms in a tree."
+  (cond ((atom l) 1)
+        (t (+ (count-atoms (car l))
+              (count-atoms (cdr l))))))
+
+(defun count-cons (l)
+  "Count the number of cons cells in a tree."
+  (cond ((atom l) 0)
+        (t (+ 1
+              (count-cons (car l))
+              (count-cons (cdr l))))))
+
+(defun sum-tree (l)
+  "Sums all numbers in a tree. Non-numbers ignored."
+  (cond ((numberp l) l)
+        ((atom l) 0)
+        (t (+ (sum-tree (car l))
+              (sum-tree (cdr l))))))
+
+(defun my-subst (new old l)
+  "Recursive SUBST."
+  (cond ((eql l old) new)
+        ((atom l) l)
+        (t (cons (my-subst new old (car l))
+                 (my-subst new old (cdr l))))))
+
+; 8.43 -- Why doesn't this work? It even matches the example...
+(defun flatten (l)
+  "Recursively flatten a tree into a list."
+  (cond ((atom l) (list l))
+        (t (append (flatten (car l))
+                   (flatten (cdr l))))))
+
+(defun tree-depth (l)
+  "Returns maximum depth of a binary tree."
+  (cond ((atom l) 0)
+        (t (+ 1 (max (tree-depth (car l))
+                     (tree-depth (cdr l)))))))
+
+(defun paren-depth (l)
+  "Returns the maximum depth of nested parens."
+  (cond ((atom l) 0)
+        (t (+ (max (1+ (paren-depth (car l)))
+                   (paren-depth (cdr l)))))))
+
+(defun count-up (n)
+  "Count up without helper function."
+  (cond ((zerop n) nil)
+        (t (append (count-up (1- n)) (list n)))))
+
+(defun make-loaf (n)
+  "Makes a loaf of size n."
+  (if (zerop n)
+      nil
+      (cons 'x (make-loaf (1- n)))))
+
+(defun bury (el n)
+  "Buries an item in a number of parens."
+  (cond ((zerop n) el)
+        (t (list (bury el (1- n))))))
+
+(defun pairings (l1 l2)
+  "Zips 2 lists."
+  (cond ((null l1) nil)
+        (t (cons (list (car l1) (car l2))
+                 (pairings (cdr l1) (cdr l2))))))
+
+(defun sublists (l)
+  "Returns all sublists of l."
+  (cond ((null l) nil)
+        (t (cons l (sublists (cdr l))))))
+
+(defun my-reverse (l)
+  "Recursive REVERSE."
+  (defun helper (l acc)
+    (cond ((null l) acc)
+          (t (helper (cdr l) (cons (car l) acc)))))
+  (helper l nil))
+
+(defun my-union (l1 l2)
+  "Recursive UNION"
+  (cond ((null l1) l2)
+        ((null l2) l1)
+        (t (cons (car l1)
+                 (my-union (cdr l1) (remove (car l1) l2))))))
+
+(defun largest-even (l)
+  "Returns the largest even number in a list of nonnegative integers."
+  (defun helper (l max)
+    (let ((cand (car l)))
+      (cond ((null l) max)
+            ((and (> cand max)
+                  (evenp cand))
+             (helper (cdr l) cand))
+            (t (helper (cdr l) max)))))
+  (helper l 0))
+
+(defun huge (n)
+  "Raises a number to its own power."
+  (defun helper (n power)
+    (cond ((= power 1) n)
+          (t (* n (helper n (1- power))))))
+  (helper n n))
+
+(defun every-other (l)
+  "Returns every other element of a list."
+  (defun helper (l pick)
+    (cond ((null l) nil)
+          (pick (cons (car l) (helper (cdr l) nil)))
+          (t (helper (cdr l) t))))
+  (helper l t))
+
+(defun left-half (l)
+  "Returns the left half of a given list."
+  (defun helper (l take)
+    (cond ((null l) nil)
+          ((<= take 0) nil)
+          (t (cons (car l) (helper (cdr l) (1- take))))))
+  (helper l (/ (length l) 2)))
+
+(defun merge-lists (l1 l2)
+  "Takes 2 sorted lists. Merges them in order."
+  (cond ((null l1) l2)
+        ((null l2) l1)
+        ((< (car l1) (car l2))
+         (cons (car l1) (merge-lists (cdr l1) l2)))
+        (t (cons (car l2) (merge-lists l1 (cdr l2))))))
+
+(defvar *family*)
+(setf *family*
+      '((colin nil nil)
+        (deirdre nil nil)
+        (arthur nil nil)
+        (kate nil nil)
+        (frank nil nil)
+        (linda nil nil)
+        (suzanne colin deirdre)
+        (bruce arthur kate)
+        (charles arthur kate)
+        (david arthur kate)
+        (ellen arthur kate)
+        (george frank linda)
+        (hillary frank linda)
+        (andre nil nil)
+        (tamara bruce suzanne)
+        (vincent bruce suzanne)
+        (wanda nil nil)
+        (ivan george ellen)
+        (julie george ellen)
+        (marie george ellen)
+        (nigel andre hillary)
+        (frederick nil tamara)
+        (zelda vincent wanda)
+        (joshua ivan wanda)
+        (quentin nil nil)
+        (robert quentin julie)
+        (olivia nigel marie)
+        (peter nigel marie)
+        (erica nil nil)
+        (yvette robert zelda)
+        (diane peter erica)))
+
+(defun father (person)
+  "Gets a person's father."
+  (cadr (assoc person *family*)))
+
+(defun mother (person)
+  "Gets a person's mother."
+  (caddr (assoc person *family*)))
+
+(defun parents (person)
+  "Gets a person's parents."
+  (cdr (assoc person *family*)))
+
+(defun children (person)
+  "Gets a person's children."
+  (car (assoc person
+              *family*
+              :test (lambda (p x)
+                      (or (eql p (cadr x))
+                          (eql p (caddr x)))))))
