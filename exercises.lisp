@@ -102,8 +102,7 @@
   their similarities, with flavor text."
   (cons (count-common desc) '(common features)))
 
-(defvar *nerd-states*)
-(setf *nerd-states*
+(defparameter *nerd-states*
 '((sleeping eating)
   (eating waiting-for-a-computer)
   (waiting-for-a-computer programming)
@@ -145,8 +144,7 @@
                    nil))
            l))
 
-(defvar *note-table*)
-(setf *note-table*
+(defparameter *note-table*
   '((c 1)
     (c-sharp 2)
     (d 3)
@@ -202,8 +200,7 @@
   "Returns the suit of a given card"
   (cadr card))
 
-(defvar my-hand)
-(setf my-hand
+(defparameter my-hand
   '((3 hearts)
     (5 clubs)
     (2 diamonds)
@@ -217,8 +214,7 @@
            #'(lambda (card) (eql suit (suit card)))
            hand)))
 
-(defvar colors)
-(setf colors
+(defparameter colors
       '((clubs black)
         (diamonds red)
         (hearts red)
@@ -247,8 +243,7 @@
                              (eql suit (suit card)))
                          hand)))
 
-(defvar *all-ranks*)
-(setf *all-ranks*
+(defparameter *all-ranks*
       '(2 3 4 5 6 7 8 9 10 jack queen king ace))
 
 (defun higher-rank-p (card1 card2)
@@ -267,8 +262,7 @@
                   card2))
           hand))
 
-(defvar *database*)
-(setf *database*
+(defparameter *database*
       '((b1 shape brick)
         (b1 color green)
         (b1 material wood)
@@ -298,11 +292,11 @@
         (b6 color purple)
         (b6 size large)))
 
-; 7.29
+                                        ; 7.29
 (defun match-element (e1 e2)
   "Takes 2 elements and returns t if they're equal, or the second is a question mark."
   (or (eql e2 '?)
-       (eql e1 e2)))
+      (eql e1 e2)))
 
 (defun match-triple (assertion pattern)
   "Takes an assertion and a pattern and returns t if the assertion matches the
@@ -326,9 +320,9 @@
 
 (defun supp-cube (block)
   "Returns true if given block is supported by a cube"
-    (find-if #'(lambda (supp)
-                 (fetch (list supp 'shape 'cube)))
-             (supporters block)))
+  (find-if #'(lambda (supp)
+               (fetch (list supp 'shape 'cube)))
+           (supporters block)))
 
 (defun desc1 (block)
   "Returns a list of facts about block."
@@ -342,23 +336,20 @@
   "Returns a list of attributes block has."
   (reduce #'append (desc2 block)))
 
-; 7.30
-(defvar *words*)
-(setf *words*
+                                        ; 7.30
+(defparameter *words*
       '((one un)
         (two deux)
         (three trois)
         (four quatre)
         (five cinq)))
 
-(defvar *spanish-words*)
-
 (mapcar #'(lambda (w s)
             (append w (list s)))
         *words*
         '(uno dos tres quatro cinco))
 
-; 8.4
+                                        ; 8.4
 (defun laugh (n)
   "Return a list containing given number of \"HA\"s."
   (cond ((= n 0) '())
@@ -405,7 +396,7 @@
         (t (+ (fib (- n 1))
               (fib (- n 2))))))
 
-; 8.14
+                                        ; 8.14
 (defun inf ()
   "Smallest infinite recursive."
   (inf))
@@ -416,7 +407,7 @@
         ((oddp (car l)) t)
         (t (anyoddp (cdr l)))))
 
-; 8.17
+                                        ; 8.17
 (defun find-first-odd (l)
   "Returns the first odd number in a list."
   (cond ((null l) nil)
@@ -465,7 +456,7 @@
         (t (let ((n (car l)))
              (cons (* n n) (square-list (cdr l)))))))
 
-; 8.28
+                                        ; 8.28
 (defun my-nth (n x)
   "Return the nth item of a list, recursively."
   (cond ((null x) nil)
@@ -492,7 +483,7 @@
         ((null l1) 'second-is-longer)
         (t (compare-lengths (cdr l1) (cdr l2)))))
 
-; 8.32
+                                        ; 8.32
 (defun sum-numeric-elements (l)
   "Sum only the numeric elements of a list."
   (cond ((null l) 0)
@@ -564,7 +555,7 @@
         (t (cons (my-subst new old (car l))
                  (my-subst new old (cdr l))))))
 
-; 8.43 -- Why doesn't this work? It even matches the example...
+                                        ; 8.43 -- Why doesn't this work? It even matches the example...
 (defun flatten (l)
   "Recursively flatten a tree into a list."
   (cond ((atom l) (list l))
@@ -666,8 +657,7 @@
          (cons (car l1) (merge-lists (cdr l1) l2)))
         (t (cons (car l2) (merge-lists l1 (cdr l2))))))
 
-(defvar *family*)
-(setf *family*
+(defparameter *family*
       '((colin nil nil)
         (deirdre nil nil)
         (arthur nil nil)
@@ -710,12 +700,14 @@
 
 (defun parents (person)
   "Gets a person's parents."
+                                        ; I don't know if this is an abuse of assoc (is it only supposed to be used on
+                                        ; pairs?), but it works!
   (cdr (assoc person *family*)))
 
 (defun children (person)
   "Gets a person's children."
-  (car (assoc person
-              *family*
-              :test (lambda (p x)
-                      (or (eql p (cadr x))
-                          (eql p (caddr x)))))))
+  (mapcar #'car
+          (remove-if-not #'(lambda (family)
+                             (or (eql person (cadr family))
+                                 (eql person (caddr family))))
+                         *family*)))
