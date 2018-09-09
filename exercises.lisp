@@ -438,7 +438,7 @@
 
 (defun applicative-fact (n)
   "An applicative version of the factorial function."
-  (mapcar #'* (count-down n)))
+  (reduce #'* (count-down n)))
 
 (defun count-down-b (n)
   "count-down, but it ends in 0 instead"
@@ -737,10 +737,10 @@
   "Determines if the first person is descended from the second."
   (cond ((null descendent) nil)
         ((member ancestor (parents descendent)) t)
-                       (or (descended-from (father descendent)
-                                           ancestor)
-                           (descended-from (mother descendent)
-                                           ancestor))))
+        (t (or (descended-from (father descendent)
+                               ancestor)
+               (descended-from (mother descendent)
+                               ancestor)))))
 
 (defun ancestors (person)
   "Return a person's set of ancestors."
