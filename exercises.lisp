@@ -817,3 +817,26 @@
                                   l2
                                   (cons cand acc))))))))
     (helper l1 l2 '())))
+
+; 8.64
+(defun tree-find-if (fn tree)
+  "Return the first leaf of a tree that fulfills a predicate."
+  (cond ((and tree
+              (atom tree)
+              (funcall fn tree))
+         tree)
+        ((atom tree) nil)
+        (t (or (tree-find-if fn (car tree))
+               (tree-find-if fn (cdr tree))))))
+
+(defun tr-count-slices (l)
+  "Tail recursive counting slices"
+  (labels ((helper (l acc)
+             (if l (helper (cdr l) (1+ acc)) acc)))
+    (helper l 0)))
+
+(defun tr-reverse (ls)
+  "Tail recursive list reverse"
+  (labels ((helper (l acc)
+             (if l (helper (cdr l) (cons (car l) acc)) acc)))
+    (helper ls '())))
