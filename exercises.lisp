@@ -700,9 +700,8 @@
 
 (defun parents (person)
   "Gets a person's parents."
-                                        ; I don't know if this is an abuse of assoc (is it only supposed to be used on
-                                        ; pairs?), but it works!
-  (cdr (assoc person *family*)))
+  (union (and (father person) (list (father person)))
+         (and (mother person) (list (mother person)))))
 
 (defun children (person)
   "Gets a person's children."
@@ -711,3 +710,41 @@
                              (or (eql person (cadr family))
                                  (eql person (caddr family))))
                          *family*)))
+
+; 8.60b
+(defun siblings (person)
+  "Gets a person's siblings"
+  (set-difference
+   (union (children (father person))
+          (children (mother person)))
+   (list person)))
+
+(defun mapunion (fn ls)
+  "Maps a function over a list of lists, then unions them all."
+  (reduce #'union (mapcar fn ls)))
+
+(defun grandparents (person)
+  "Gets a person's grandparents"
+  (mapunion #'parents (parents person)))
+
+(defun cousins (person)
+  "Gets a person's first cousins."
+  (mapunion #'children
+            (mapunion #'siblings
+                      (parents person))))
+
+(defun descended-from (descendent ancestor)
+  "Determines if the first person is descended from the second."
+  (cond ((null descendent) nil)
+        ((member ancestor (parents descendent)) t)
+                       (or (descended-from (father descendent)
+                                           ancestor)
+                           (descended-from (mother descendent)
+                                           ancestor))))
+
+(defun ancestors (person)
+  "Return a person's set of ancestors."
+  (cond ((null person) nil)
+        (t (union (parents person)
+                  (union (ancestors (father person))
+                         (ancestors (mother person)))))))
