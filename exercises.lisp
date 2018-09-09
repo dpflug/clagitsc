@@ -748,3 +748,72 @@
         (t (union (parents person)
                   (union (ancestors (father person))
                          (ancestors (mother person)))))))
+
+(defun generation-gap (p1 p2)
+  "Returns the number of generations between 2 people."
+  (defun helper (person acc)
+    (cond ((null person) nil)
+          ((eql p2 person) acc)
+          (t (or (helper (father person) (1+ acc))
+                 (helper (mother person) (1+ acc))))))
+  (helper p1 0))
+
+; 8.61
+(defun count-up-tail (n)
+  "Tail-recursive count-up"
+  (defun helper (n acc)
+    (cond ((<= n 0) nil)
+          ((eql (car (last acc)) n) acc)
+          (t (helper n (append acc (list (1+ (car (last acc)))))))))
+  (helper n '(1)))
+
+(defun fact-tail (n)
+  "Tail-recursive factorial"
+  (defun helper (n acc)
+    (cond ((zerop n) acc)
+          (t (helper (1- n) (* acc n)))))
+  (helper n 1))
+
+(defun union-tail (l1 l2)
+  "Tail-recursive union"
+  (defun helper (l1 l2 acc)
+    (let ((cand (car l1)))
+      (cond ((null l1) (append l2 acc))
+            ((null l2) (append l1 acc))
+            ((member cand l2)
+             (helper (cdr l1)
+                     (remove-if #'(lambda (i)
+                                    (eql cand i))
+                                l2)
+                     (cons cand acc)))
+            (t (helper (cdr l1) l2 (cons cand acc))))))
+  (helper l1 l2 '()))
+
+(defun intersection-tail (l1 l2)
+  "Tail-recursive intersection"
+  (defun helper (l1 l2 acc)
+    (let ((cand (car l1)))
+      (cond ((or (null l1) (null l2)) acc)
+            ((member cand l2)
+             (helper (cdr l1) (remove-if #'(lambda (i)
+                                             (eql cand i))
+                                         l2)
+                     (cons cand acc)))
+            (t (helper (cdr l1) l2 acc)))))
+  (helper l1 l2 '()))
+
+(defun set-difference-tail (l1 l2)
+  "Tail-recursive set-difference"
+  (defun helper (l1 l2 acc)
+    (let ((cand (car l1)))
+      (flet ((remove-helper (i) (eql i cand)))
+        (cond ((null l1) (append l2 acc))
+              ((null l2) (append l1 acc))
+              ((member cand l2)
+               (helper (remove-if #'remove-helper l1)
+                       (remove-if #'remove-helper l2)
+                       acc))
+              (t (helper (remove-if #'remove-helper l1)
+                         l2
+                         (cons cand acc)))))))
+  (helper l1 l2 '()))
