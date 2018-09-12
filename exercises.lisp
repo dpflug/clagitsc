@@ -840,3 +840,30 @@
   (labels ((helper (l acc)
              (if l (helper (cdr l) (cons (car l) acc)) acc)))
     (helper ls '())))
+
+(defun arith-eval (exp)
+  "Evaluates an infix arithmetic expression."
+  (if (numberp exp)
+      exp
+      (funcall (cadr exp)
+               (arith-eval (car exp))
+               (arith-eval (caddr exp)))))
+
+(defun legalp (exp)
+  "Determines if a given list is a proper arith expression."
+  (cond ((numberp exp) t)
+        ((atom exp) nil)
+        (t (and (= (length exp) 3)
+                (legalp (car exp))
+                (member (cadr exp) '(+ - * /))
+                (legalp (caddr exp))))))
+
+(defun factor-tree (n)
+  "Produce a factorization tree for a number."
+  (labels ((helper (n p)
+             (cond ((= n 1) nil)
+                   ((= n p) (list n p))
+                   ((zerop (rem n p))
+                    (list n p (helper (/ n p) p)))
+                   (t (helper n (+ p 1))))))
+    (helper n 2)))
