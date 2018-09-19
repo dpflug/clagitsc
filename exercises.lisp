@@ -867,3 +867,19 @@
                     (list n p (helper (/ n p) p)))
                    (t (helper n (+ p 1))))))
     (helper n 2)))
+
+; 9.5
+(defun print-board (game)
+  (labels ((pp (ls n)
+             (if (null (nth n ls))
+                 " "
+                 (nth n ls)))
+           (prline (line)
+             (format t "~& ~A | ~A | ~A"
+                     (pp line 0) (pp line 1) (pp line 2)))
+           (prhoriz () (format t "~&-----------")))
+    (prline game)
+    (prhoriz)
+    (prline (nthcdr 3 game))
+    (prhoriz)
+    (prline (nthcdr 6 game))))
