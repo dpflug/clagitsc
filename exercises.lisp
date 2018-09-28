@@ -883,3 +883,54 @@
     (prline (nthcdr 3 game))
     (prhoriz)
     (prline (nthcdr 6 game))))
+
+; 9.10
+(defun space-over (n)
+  "Print n adjacent spaces."
+  (cond ((<= n 0) (format t ""))
+        (t (format t " ")
+           (space-over (1- n)))))
+
+(defun plot-one-point (plotting-string y-val)
+  "Place a string after a certain number of spaces."
+  (space-over y-val)
+  (format t "~A~&" plotting-string))
+
+(defun plot-points (plotting-string points)
+  "Plot a string at a list of points."
+  (cond ((null points) (format t ""))
+        (t (plot-one-point plotting-string (car points))
+           (plot-points plotting-string (cdr points)))))
+
+(defun generate (m n)
+  "Generate a list of numbers from m to n."
+  (cond ((>= m n) (list n))
+        (t (cons m (generate (1+ m) n)))))
+
+(defun make-graph ()
+  "Prompts for a function to graph, where to start and end the graph, and what string to graph. Then, it prints the graph."
+  (labels ((prompt-for (ask)
+             (format t ask)
+             (read)))
+    (let* ((func
+             (prompt-for "Enter the function to graph: "))
+           (start
+             (prompt-for "Where should I start the graph? "))
+           (end
+             (prompt-for "Where should I end the graph? "))
+           (plotting-string
+             (prompt-for "What string should I graph with? ")))
+      (plot-points plotting-string
+                   (mapcar func (generate start end))))))
+
+; 9.11
+(defun dot-prin1 (l)
+  "Takes a list and prints it in dot notation."
+  (if (atom l)
+      (format t "~S" l)
+      (progn
+        (format t "(")
+        (dot-prin1 (car l))
+        (format t " . ")
+        (dot-prin1 (cdr l))
+        (format t ")"))))
