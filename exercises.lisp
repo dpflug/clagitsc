@@ -1,5 +1,5 @@
 (defpackage :clgisc
-  (:use :common-lisp :sdraw))
+  (:use :common-lisp))
 (in-package :clgisc)
 
 (defun clgisc-2.22 (a b c d)
@@ -870,6 +870,7 @@
 
 ; 9.5
 (defun print-board (game)
+  "Take a list representing a tic-tac-toe board and print it in a pretty way."
   (labels ((pp (ls n)
              (if (null (nth n ls))
                  " "
@@ -924,13 +925,28 @@
                    (mapcar func (generate start end))))))
 
 ; 9.11
-(defun dot-prin1 (l)
+(defun dot-prin1 (i)
   "Takes a list and prints it in dot notation."
-  (if (atom l)
-      (format t "~S" l)
+  (if (atom i)
+      (format t "~S" i)
       (progn
         (format t "(")
-        (dot-prin1 (car l))
+        (dot-prin1 (car i))
         (format t " . ")
-        (dot-prin1 (cdr l))
+        (dot-prin1 (cdr i))
         (format t ")"))))
+
+(defun hybrid-prin1 (i)
+  "Takes an list and prints it either in dot or list notation, depending on cdr."
+  (labels ((cdr-helper (c)
+             (cond ((null c) (format t ")"))
+                   ((atom c) (format t " . ~S)" c))
+                   (t (format t " ")
+                      (hybrid-prin1 (car c))
+                      (cdr-helper (cdr c)))))
+           (car-helper (c)
+             (format t "(")
+             (hybrid-prin1 c)))
+    (cond ((atom i) (format t "~S" i))
+          (t (car-helper (car i))
+             (cdr-helper (cdr i))))))
